@@ -41,6 +41,4 @@ head, flippers, and the carapace of each turtle.</p>
 
 [6] A. Rosebrock, “Mask R-CNN with OpenCV,” PyImageSearch, Nov. 19, 2018. https://pyimagesearch.com/2018/11/19/mask-r-cnn-with-opencv/
 
-‌---
-
 <p align="right"><a target="_blank" href="https://icons8.com/icon/g5JjVIjdQ1uC/visionn">Vision</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a></p>
