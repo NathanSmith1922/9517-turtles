@@ -9,11 +9,26 @@ head, flippers, and the carapace of each turtle.</p>
 
 ## Documentation
 
-(Mostly going to use this to write notes for what we can use)
+**Mostly going to use this to write notes for what we can use.**
 
-#### Deep Learning Lecture Material
-- Selective Search for **Object Detection**
+### Object Detection
 
+#### Selective Search 
+While it is for **object detection**, the pre-processing method is interesting. It starts by over-segmenting the image based on intensity of the pixels using a graph-based segmentation (Felzenszwalb and Huttenlocher).
+
+Add all bounding boxes corresponding to segmented parts to the list of region proposals then groups adjacent segments based on similarity.
+
+### Semantic Segmentation
+
+#### Sliding Window Approach
+Extract “patches” from entire image, classify centre pixel based on the neighbouring context.
+
+#### Convolution
+Design a network having convolutional layers, with downsampling and upsampling inside the network (learning in an end-to-end manner)
+
+### Instance Segmentation
+
+#### Mask R-CNN
 
 ---
 
