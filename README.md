@@ -17,6 +17,8 @@ head, flippers, and the carapace of each turtle.</p>
 - **Edge Segmentation** can be useful for identifying the edges and defining the boundaries between the turtle and the background or separating different body parts.
 - **Clustering-based Segmentation**: Likely we won't need any unsupervised methods since we can leverage the labeled masks directly for training supervised segmentation models.
 
+> For discussing traditional methods, we can select these as examples for why they are not as efficient. But then we can introduce the idea that we can use some sort of hybrid approach with DL instead?
+
 ### Semantic Segmentation
 > Could be useful in this particular problem **given** no two body parts of the same class overlap each other in the turtle image dataset. This could reduce the computational requirements of the algorithm.
 
@@ -47,5 +49,7 @@ head, flippers, and the carapace of each turtle.</p>
 [5] V. Kookna, “Semantic vs. Instance vs. Panoptic Segmentation,” PyImageSearch, Jun. 29, 2022. https://pyimagesearch.com/2022/06/29/semantic-vs-instance-vs-panoptic-segmentation/
 
 [6] A. Rosebrock, “Mask R-CNN with OpenCV,” PyImageSearch, Nov. 19, 2018. https://pyimagesearch.com/2018/11/19/mask-r-cnn-with-opencv/
+
+---
 
 <p align="right"><a target="_blank" href="https://icons8.com/icon/g5JjVIjdQ1uC/visionn">Vision</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a></p>
