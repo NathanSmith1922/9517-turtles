@@ -11,24 +11,19 @@ head, flippers, and the carapace of each turtle.</p>
 
 **Mostly going to use this to write notes for what we can use.**
 
-### Object Detection
+### Pre-processing
+Most studied methods have an elaborate pre-processing method in place to help with assisting the accuracy of the algorithm. Could use the more traditional segmentation methods to assist with seperating unneeded picture information with those we can perform predictions on.
 
-#### Selective Search 
-While it is for **object detection**, the pre-processing method is interesting. It starts by over-segmenting the image based on intensity of the pixels using a graph-based segmentation (Felzenszwalb and Huttenlocher).
-
-Add all bounding boxes corresponding to segmented parts to the list of region proposals then groups adjacent segments based on similarity.
+- **Thresholding**
+    - **Selective Search** - While it is for **object detection**, the **pre-processing** method is interesting. It starts by over-segmenting the image based on intensity of the pixels using a graph-based segmentation (Felzenszwalb and Huttenlocher).
+- **Edge Segmentation**
+- **Clustering-based Segmentation**
 
 ### Semantic Segmentation
-
-#### Sliding Window Approach
-Extract “patches” from entire image, classify centre pixel based on the neighbouring context.
-
-#### Convolution
-Design a network having convolutional layers, with downsampling and upsampling inside the network (learning in an end-to-end manner)
+Could be useful in this particular problem **given** no two body parts of the same class overlap each other in the turtle image dataset. This could reduce the computational requirements of the algorithm.
 
 ### Instance Segmentation
-
-#### Mask R-CNN
+If the former is not an option, we may have to look into this.
 
 ---
 
