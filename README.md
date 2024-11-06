@@ -7,16 +7,15 @@ head, flippers, and the carapace of each turtle.</p>
 
 ---
 
-## Documentation
+## Deep Learning Documentation
 > Mostly going to use this to write notes for what we can use.
 
 ### Pre-processing
-> Most studied methods have an elaborate pre-processing method in place to help with assisting the accuracy of the algorithm. Could use the more traditional segmentation methods to assist with seperating unneeded picture information with those we can perform predictions on.
+> Pre-processing plays a critical role in improving the accuracy of image segmentation models. Traditional segmentation techniques can be used to separate relevant image regions (such as the turtle body parts) from background or irrelevant information, helping the algorithm focus on the areas that need segmentation.
 
-- **Thresholding**
-    - **Selective Search** - While it is for **object detection**, the **pre-processing** method is interesting. It starts by over-segmenting the image based on intensity of the pixels using a graph-based segmentation (Felzenszwalb and Huttenlocher).
-- **Edge Segmentation**
-- **Clustering-based Segmentation**
+- **Thresholding** is useful for segmenting areas with strong contrasts in pixel intensity. For instance, it could be used to separate the turtle from the background if there’s a clear distinction between the turtle and the surrounding environment in terms of brightness or color
+- **Edge Segmentation** can be useful for identifying the edges and defining the boundaries between the turtle and the background or separating different body parts.
+- **Clustering-based Segmentation**: Likely we won't need any unsupervised methods since we can leverage the labeled masks directly for training supervised segmentation models.
 
 ### Semantic Segmentation
 > Could be useful in this particular problem **given** no two body parts of the same class overlap each other in the turtle image dataset. This could reduce the computational requirements of the algorithm.
