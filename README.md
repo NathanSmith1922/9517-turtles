@@ -9,6 +9,12 @@ head, flippers, and the carapace of each turtle.</p>
 
 ## Documentation
 
+(Mostly going to use this to write notes for what we can use)
+
+#### Deep Learning Lecture Material
+- Selective Search for **Object Detection**
+
+
 ---
 
 <p align="right"><a target="_blank" href="https://icons8.com/icon/g5JjVIjdQ1uC/visionn">Vision</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a></p>
