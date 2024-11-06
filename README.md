@@ -19,6 +19,8 @@ head, flippers, and the carapace of each turtle.</p>
 
 > For discussing traditional methods, we can select these as examples for why they are not as efficient. But then we can introduce the idea that we can use some sort of hybrid approach with DL instead?
 
+> I'm actually unsure how we can tie the masks to the more primitive segmenting methods. Only thing I can think of is that you can use the segmented outlines to fit the whole mask, but the details regardng the limbs might be a bit harder to distinguish. We need to consider angles and cut-off images too.
+
 ### Semantic Segmentation
 > Could be useful in this particular problem **given** no two body parts of the same class overlap each other in the turtle image dataset. This could reduce the computational requirements of the algorithm.
 
