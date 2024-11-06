@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/vision.png" alt="Vision Icon"></p>
+<p align="center"><img src="assets/ow.gif" alt="ow"></p>
 <h1 align="center">COMP9517 Group Project</h1>
 
 <p align="center">The goal of this group project is to develop and compare different computer vision methods
