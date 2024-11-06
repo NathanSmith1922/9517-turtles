@@ -34,6 +34,9 @@ head, flippers, and the carapace of each turtle.</p>
 - **Mask R-CNN**
 - 
 
+## Performance
+> Just remember that training between CPU and GPU is vastly different. GPU is probably going to perform the fastest during testing.
+
 ---
 
 ## References
