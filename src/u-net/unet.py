@@ -2,42 +2,39 @@ import torch
 import torch.nn as nn
 
 """
-Starter code for UNET sourced from:
-N. Tomar, “UNET Implementation in PyTorch - Idiot Developer,” Idiot Developer, May 22, 2021. https://idiotdeveloper.com/unet-implementation-in-pytorch/ (accessed Nov. 06, 2024).
+References
 
-TODO -
-Modification to this using for loops take inspiration from
-M. Tran, “Understanding U-Net,” Medium, Nov. 16, 2022. https://towardsdatascience.com/understanding-u-net-61276b10f360
+[1] N. Tomar, “UNET Implementation in PyTorch - Idiot Developer,” Idiot Developer, May 22, 2021. https://idiotdeveloper.com/unet-implementation-in-pytorch/ (accessed Nov. 06, 2024).
+[2] M. Tran, “Understanding U-Net,” Medium, Nov. 16, 2022. https://towardsdatascience.com/understanding-u-net-61276b10f360
+[3] R. Chew, “U-NETS For Dummies (PyTorch & TensorFlow) - Ryan Chew - Medium,” Medium, Sep. 04, 2024. https://medium.com/@chewryan0/u-nets-for-dummies-pytorch-tensorflow-dddcdb8a2759 (accessed Nov. 07, 2024).
+[4] “torch — PyTorch 1.12 documentation,” pytorch.org. https://pytorch.org/docs/stable/torch.html
+
 """
 
-class conv_block(nn.Module):
+LEARNING_RATE = 0.001
+
+class Conv3x3ReLU(nn.Module):
     def __init__(self, in_c, out_c):
         super().__init__()
 
-        self.conv1 = nn.Conv2d(in_c, out_c, kernel_size=3, padding=1)
-        self.bn1 = nn.BatchNorm2d(out_c)
+        # Using padding after the convolutional layer will keep the image 
+        # size constant until the pooling at the end of the block.
 
-        self.conv2 = nn.Conv2d(out_c, out_c, kernel_size=3, padding=1)
-        self.bn2 = nn.BatchNorm2d(out_c)
-
-        self.relu = nn.ReLU()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_c, out_c, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(out_c, out_c, kernel_size=3, padding=1),
+            nn.ReLU()
+        )
 
     def forward(self, inputs):
-        x = self.conv1(inputs)
-        x = self.bn1(x)
-        x = self.relu(x)
-
-        x = self.conv2(x)
-        x = self.bn2(x)
-        x = self.relu(x)
-
-        return x
+        return self.conv(inputs)
     
-class encoder_block(nn.Module):
+class Encoder(nn.Module):
     def __init__(self, in_c, out_c):
         super().__init__()
 
-        self.conv = conv_block(in_c, out_c)
+        self.conv = Conv3x3ReLU(in_c, out_c)
         self.pool = nn.MaxPool2d((2, 2))
 
     def forward(self, inputs):
@@ -46,59 +43,66 @@ class encoder_block(nn.Module):
 
         return x, p
     
-class decoder_block(nn.Module):
+class Decoder(nn.Module):
     def __init__(self, in_c, out_c):
         super().__init__()
 
-        self.up = nn.ConvTranspose2d(in_c, out_c, kernel_size=2, stride=2, padding=0)
-        self.conv = conv_block(out_c+out_c, out_c)
+        self.up = nn.ConvTranspose2d(in_c, out_c, kernel_size=2)
+        self.conv = Conv3x3ReLU(out_c + out_c, out_c)
 
     def forward(self, inputs, skip):
         x = self.up(inputs)
-        x = torch.cat([x, skip], axis=1)
+        x = torch.cat([x, skip], dim=1)
         x = self.conv(x)
 
         return x
-    
-class build_unet(nn.Module):
-    def __init__(self):
+
+class UNet(nn.Module):
+    def __init__(self, in_channels, out_channels, layers=4):
         super().__init__()
 
-        """ Encoder """
-        self.e1 = encoder_block(3, 64)
-        self.e2 = encoder_block(64, 128)
-        self.e3 = encoder_block(128, 256)
-        self.e4 = encoder_block(256, 512)
+        self.encoders = nn.ModuleList()
+        # Create all the Encoders
+        current_in_channels = in_channels
+        for i in range(layers):
+            # Doubling the number of output channels at each layer
+            current_out_channels = 64 * (2**i)
+            self.encoders.append(Encoder(current_in_channels, current_out_channels))
+            current_in_channels = current_out_channels
 
-        """ Bottleneck """
-        self.b = conv_block(512, 1024)
+        self.bottleneck = Conv3x3ReLU(current_in_channels, current_in_channels * 2)
 
-        """ Decoder """
-        self.d1 = decoder_block(1024, 512)
-        self.d2 = decoder_block(512, 256)
-        self.d3 = decoder_block(256, 128)
-        self.d4 = decoder_block(128, 64)
+        self.decoders = nn.ModuleList()
+        # Create all the Decoders
+        for i in range(layers, 0, -1):
+            current_in_channels = 64 * (2**i)
+            current_out_channels = 64 * (2**(i-1))
+            self.decoders.append(Decoder(current_in_channels, current_out_channels))
+        
+        # Final output layer
+        self.final_conv = nn.Conv2d(64, out_channels, kernel_size=1)
 
-        """ Classifier """
-        self.outputs = nn.Conv2d(64, 1, kernel_size=1, padding=0)
+    def forward(self, x):
+        skips = []
+        for encoder in self.encoders:
+            skip, x = encoder(x)
+            skips.append(skip)
+        
+        x = self.bottleneck(x)
+        
+        for i, decoder in enumerate(self.decoders):
+            x = decoder(x, skips[-(i + 1)])
+        
+        x = self.final_conv(x)
+        return x
+    
+def main():
+    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    unet = UNet(1, 2, 4).to(device)
+    print(unet)
+    optimizer = torch.optim.Adam(params=unet.parameters(), lr=LEARNING_RATE)
+    
 
-    def forward(self, inputs):
-        """ Encoder """
-        s1, p1 = self.e1(inputs)
-        s2, p2 = self.e2(p1)
-        s3, p3 = self.e3(p2)
-        s4, p4 = self.e4(p3)
-
-        """ Bottleneck """
-        b = self.b(p4)
-
-        """ Decoder """
-        d1 = self.d1(b, s4)
-        d2 = self.d2(d1, s3)
-        d3 = self.d3(d2, s2)
-        d4 = self.d4(d3, s1)
-
-        """ Classifier """
-        outputs = self.outputs(d4)
-
-        return outputs
+if __name__ == "__main__":
+    main()
+ 
